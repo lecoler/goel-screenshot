@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QGridLayout>
 #include <QLabel>
+#include <QDesktopWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -38,8 +39,10 @@ void MainWindow::init()
     QSize screenSize = screen->size();
     this->setMinimumSize(screenSize);
     //获取当前屏幕内容并填充屏幕
-    bgImg = screen->grabWindow(0);
-
+//    bgImg = screen->grabWindow(0);
+    qDebug()<<this->grab();
+    bgImg = this->grab();
+    copy(bgImg);
 
 }
 //绘图

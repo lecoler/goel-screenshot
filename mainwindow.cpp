@@ -1,6 +1,8 @@
 #include "mainwindow.h"
 #include <QKeyEvent>
 #include <QPainter>
+#include <QGridLayout>
+#include <QLabel>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -117,8 +119,19 @@ void MainWindow::showTool()
 {
     toolStatus = TOOL_SHOW;
     tool = new QWidget(this);
-    tool->setGeometry(startPos.rx()+5,endPos.ry()+10,200,25);
-    tool->setStyleSheet("background-color:#f2f2f2;");
+    tool->setGeometry(startPos.rx()+5,endPos.ry()+10,300,30);
+    tool->setStyleSheet("QWidget{background-color:#f2f2f2;}"
+                        "QLabel::hover{color:#32CD32;font-size:14px;}");
+
+    QGridLayout *layout = new QGridLayout(tool);
+    tool->setLayout(layout);
+
+    QLabel *completeBtn = new QLabel(tool);
+    completeBtn->setText("保存至剪切板");
+//    connect(completeBtn,&QLabel::clicked,[=]{
+
+//    });
+    layout->addWidget(completeBtn);
 
 
     tool->show();

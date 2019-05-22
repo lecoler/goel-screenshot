@@ -40,7 +40,7 @@ void MainWindow::init()
 
 
 }
-
+//绘图
 void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
@@ -51,7 +51,6 @@ void MainWindow::paintEvent(QPaintEvent *)
 
     //选择框
     if(mouseStatus==MOUSE_PRESS){
-
         QRect select(startPos,endPos);
         painter.setClipRegion(QRegion(full)-QRegion(select));
         //边框
@@ -64,26 +63,31 @@ void MainWindow::paintEvent(QPaintEvent *)
     painter.setBrush(QBrush(QColor(0,0,0,100)));
     painter.drawRect(full);
 }
-
+//鼠标点击
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::LeftButton){
+        //左键
         mouseStatus = MOUSE_PRESS;
         pressPos = event->pos();
     }else if(mouseStatus == MOUSE_RELEASE){
+        //右键退出
         close();
     }else {
+        //右键取消
         mouseStatus = MOUSE_RELEASE;
+        hideTool();
         update();
     }
 }
-
+//鼠标移动
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     QPoint movePos = event->pos();
     QPoint pos = movePos - pressPos;
     int x = pos.rx();
     int y = pos.ry();
+    //所选区域
     if(x<0 && y<0){
         startPos = movePos;
         endPos = pressPos;
@@ -98,9 +102,32 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         endPos = movePos;
     }
     update();
+    hideTool();
 }
-
-void MainWindow::mouseReleaseEvent(QMouseEvent *)
+//鼠标释放
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    //区域选择完成，显示工具
+    if(event->button() == Qt::LeftButton && toolStatus == TOOL_HIDE){
+        showTool();
+    }
+}
+//显示tool
+void MainWindow::showTool()
+{
+    toolStatus = TOOL_SHOW;
+    tool = new QWidget(this);
+    tool->setGeometry(startPos.rx()+5,endPos.ry()+10,200,25);
+    tool->setStyleSheet("background-color:#f2f2f2;");
 
+
+    tool->show();
+}
+//隐藏tool
+void MainWindow::hideTool()
+{
+    if(toolStatus == TOOL_SHOW){
+        toolStatus = TOOL_HIDE;
+        delete tool;
+    }
 }

@@ -4,6 +4,7 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include <QDesktopWidget>
+//#include <QWaylandSurfaceGrabber>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -41,7 +42,8 @@ void MainWindow::init()
     //    this->setWindowOpacity(0.1);
     //获取当前屏幕内容并填充屏幕
     bgImg = screen->grabWindow(0,0,0,-1,-1);
-    //    bgImg = this->grab();
+//    QWaylandSurfaceGrabber
+
     copy(bgImg);
 
 }

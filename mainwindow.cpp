@@ -38,10 +38,10 @@ void MainWindow::init()
     //全屏
     QSize screenSize = screen->size();
     this->setMinimumSize(screenSize);
+    this->setWindowOpacity(0.1);
     //获取当前屏幕内容并填充屏幕
-//    bgImg = screen->grabWindow(0);
-    qDebug()<<this->grab();
-    bgImg = this->grab();
+    bgImg = screen->grabWindow(0);
+//    bgImg = this->grab();
     copy(bgImg);
 
 }
@@ -50,7 +50,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     //背景图
-    painter.drawPixmap(0,0,width(),height(),bgImg);
+//    painter.drawPixmap(0,0,width(),height(),bgImg);
     //遮罩层
     QRect full(0,0,width(),height());
 

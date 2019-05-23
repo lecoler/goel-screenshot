@@ -2,7 +2,7 @@
 #include <QKeyEvent>
 #include <QPainter>
 #include <QGridLayout>
-#include <QLabel>
+#include <QPushButton>
 #include <QDesktopWidget>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -38,10 +38,10 @@ void MainWindow::init()
     //全屏
     QSize screenSize = screen->size();
     this->setMinimumSize(screenSize);
-    this->setWindowOpacity(0.1);
+    //    this->setWindowOpacity(0.1);
     //获取当前屏幕内容并填充屏幕
-    bgImg = screen->grabWindow(0);
-//    bgImg = this->grab();
+    bgImg = screen->grabWindow(0,0,0,-1,-1);
+    //    bgImg = this->grab();
     copy(bgImg);
 
 }
@@ -50,7 +50,7 @@ void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
     //背景图
-//    painter.drawPixmap(0,0,width(),height(),bgImg);
+    painter.drawPixmap(0,0,width(),height(),bgImg);
     //遮罩层
     QRect full(0,0,width(),height());
 
@@ -122,20 +122,31 @@ void MainWindow::showTool()
 {
     toolStatus = TOOL_SHOW;
     tool = new QWidget(this);
-    tool->setGeometry(startPos.rx()+5,endPos.ry()+10,300,30);
+    tool->setGeometry(startPos.rx()+5,endPos.ry()+10,250,30);
     tool->setStyleSheet("QWidget{background-color:#f2f2f2;}"
-                        "QLabel::hover{color:#32CD32;font-size:14px;}");
-
+                        "QPushButton::hover{color:#32CD32;}"
+                        "QPushButton{font-size:12px;color:#353535;border:0;}");
+    //布局
     QGridLayout *layout = new QGridLayout(tool);
     tool->setLayout(layout);
-
-    QLabel *completeBtn = new QLabel(tool);
+    //保存至剪切板
+    QPushButton *completeBtn = new QPushButton(tool);
     completeBtn->setText("保存至剪切板");
-//    connect(completeBtn,&QLabel::clicked,[=]{
+    connect(completeBtn,&QAbstractButton::clicked,[=]{
+        copy(QGuiApplication::primaryScreen()->grabWindow(0,startPos.rx(),startPos.ry(),endPos.rx()-startPos.rx(),endPos.ry()-startPos.ry()));
+        close();
+    });
+    //取消
+    QPushButton *cancelBtn = new QPushButton(tool);
+    cancelBtn->setText("取消");
+    connect(cancelBtn,&QAbstractButton::clicked,[=]{
+        mouseStatus = MOUSE_RELEASE;
+        hideTool();
+        update();
+    });
 
-//    });
-    layout->addWidget(completeBtn);
-
+    layout->addWidget(completeBtn,1,1,1,1,Qt::AlignCenter | Qt::AlignVCenter);
+    layout->addWidget(cancelBtn,1,2,1,1,Qt::AlignCenter | Qt::AlignVCenter);
 
     tool->show();
 }
@@ -147,3 +158,4 @@ void MainWindow::hideTool()
         delete tool;
     }
 }
+

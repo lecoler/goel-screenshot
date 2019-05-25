@@ -39,10 +39,11 @@ void MainWindow::init()
     //全屏
     QSize screenSize = screen->size();
     this->setMinimumSize(screenSize);
-    //    this->setWindowOpacity(0.1);
+    //        this->setWindowOpacity(0.1);
     //获取当前屏幕内容并填充屏幕
-    bgImg = screen->grabWindow(0,0,0,-1,-1);
-//    QWaylandSurfaceGrabber
+    //    bgImg = screen->grabWindow(0,0,0,-1,-1);
+    bgImg = QPixmap::grabWindow(QApplication::desktop()->winId());
+    //    QWaylandSurfaceGrabber
 
     copy(bgImg);
 
@@ -124,7 +125,11 @@ void MainWindow::showTool()
 {
     toolStatus = TOOL_SHOW;
     tool = new QWidget(this);
-    tool->setGeometry(startPos.rx()+5,endPos.ry()+10,250,30);
+    if(height()-endPos.ry()<100){
+        tool->setGeometry(startPos.rx()+5,startPos.ry()-30-10,250,30);
+    }else {
+        tool->setGeometry(startPos.rx()+5,endPos.ry()+10,250,30);
+    }
     tool->setStyleSheet("QWidget{background-color:#f2f2f2;}"
                         "QPushButton::hover{color:#32CD32;}"
                         "QPushButton{font-size:12px;color:#353535;border:0;}");

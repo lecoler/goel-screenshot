@@ -41,11 +41,11 @@ void MainWindow::init()
     this->setMinimumSize(screenSize);
     //        this->setWindowOpacity(0.1);
     //获取当前屏幕内容并填充屏幕
-    //    bgImg = screen->grabWindow(0,0,0,-1,-1);
-    bgImg = QPixmap::grabWindow(QApplication::desktop()->winId());
+    bgImg = screen->grabWindow(0,0,0,-1,-1);
+    //    bgImg = QPixmap::grabWindow(QApplication::desktop()->winId());
     //    QWaylandSurfaceGrabber
 
-    copy(bgImg);
+    //    copy(bgImg);
 
 }
 //绘图
